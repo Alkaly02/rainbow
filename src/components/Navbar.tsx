@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <Film className="h-8 w-8 mr-2" />
-              <span className="font-bold text-xl">CinéTicket</span>
+              <span className="font-bold text-xl">Rainbow Inc.</span>
             </Link>
           </div>
 
@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
                 Administration
               </Link>
             )}
-            
+
             {currentUser ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm">{currentUser.name}</span>
@@ -114,7 +114,7 @@ const Navbar: React.FC = () => {
                 Administration
               </Link>
             )}
-            
+
             {currentUser ? (
               <>
                 <div className="px-3 py-2 text-sm">{currentUser.name}</div>
