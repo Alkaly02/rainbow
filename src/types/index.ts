@@ -19,7 +19,8 @@ export interface Movie {
   categoryId: number;
   duration: number; // in minutes
   description: string;
-  imageUrl: string;
+  image_url: string;
+  category: Category
 }
 
 export interface Room {

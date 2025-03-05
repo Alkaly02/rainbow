@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { MovieProvider } from './context/MovieContext';
@@ -12,7 +11,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import UserReservationsPage from './pages/UserReservationsPage';
 import ReservationConfirmationPage from './pages/ReservationConfirmationPage';
-import AdminPage from './pages/AdminPage';
+// import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
@@ -31,7 +30,7 @@ function App() {
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/reservations" element={<UserReservationsPage />} />
                   <Route path="/reservation-confirmation" element={<ReservationConfirmationPage />} />
-                  <Route path="/admin" element={<AdminPage />} />
+                  {/* <Route path="/admin" element={<AdminPage />} /> */}
                 </Routes>
               </main>
             </div>

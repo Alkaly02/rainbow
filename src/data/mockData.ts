@@ -49,7 +49,7 @@ export const movies: Movie[] = [
     categoryId: 1,
     duration: 120,
     description: 'An action-packed adventure with stunning visual effects.',
-    imageUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+    image_url: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
   },
   {
     id: 2,
@@ -57,7 +57,7 @@ export const movies: Movie[] = [
     categoryId: 2,
     duration: 95,
     description: 'A hilarious comedy that will keep you laughing throughout.',
-    imageUrl: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+    image_url: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
   },
   {
     id: 3,
@@ -65,7 +65,7 @@ export const movies: Movie[] = [
     categoryId: 3,
     duration: 135,
     description: 'A touching drama about family relationships and personal growth.',
-    imageUrl: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+    image_url: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
   },
   {
     id: 4,
@@ -73,7 +73,7 @@ export const movies: Movie[] = [
     categoryId: 4,
     duration: 150,
     description: 'An epic science fiction adventure set in the distant future.',
-    imageUrl: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+    image_url: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
   }
 ];
 
@@ -99,20 +99,20 @@ export const rooms: Room[] = [
 export const generateScreenings = (): Screening[] => {
   const screenings: Screening[] = [];
   const today = new Date();
-  
+
   for (let day = 0; day < 7; day++) {
     const date = new Date(today);
     date.setDate(today.getDate() + day);
-    
+
     // For each movie, create 3 screenings per day
     movies.forEach((movie, movieIndex) => {
       const times = ['10:00', '14:30', '19:00'];
-      
+
       times.forEach((time, timeIndex) => {
         const [hours, minutes] = time.split(':').map(Number);
         const screeningDate = new Date(date);
         screeningDate.setHours(hours, minutes, 0, 0);
-        
+
         screenings.push({
           id: day * 100 + movieIndex * 10 + timeIndex + 1,
           movieId: movie.id,
@@ -123,7 +123,7 @@ export const generateScreenings = (): Screening[] => {
       });
     });
   }
-  
+
   return screenings;
 };
 

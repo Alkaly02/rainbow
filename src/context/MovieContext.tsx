@@ -1,6 +1,8 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { Movie, Category, Screening } from '../types';
-import { movies, categories, screenings } from '../data/mockData';
+import { categories, screenings } from '../data/mockData';
+import { fetchCategories, fetchMovies } from '../services/api';
+import { useQuery } from '@tanstack/react-query';
 
 interface MovieContextType {
   movies: Movie[];
@@ -16,6 +18,14 @@ interface MovieContextType {
 const MovieContext = createContext<MovieContextType | undefined>(undefined);
 
 export const MovieProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { data: movies = [], isLoading, error } = useQuery<Movie[]>({
+    queryKey: ['movies'],
+    queryFn: fetchMovies,
+  });
+  const { data: categories = [], isLoading: isCategoryLoading, error: errorCategory } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+  });
   const getMovieById = (id: number): Movie | undefined => {
     return movies.find(movie => movie.id === id);
   };
