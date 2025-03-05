@@ -20,7 +20,8 @@ export interface Movie {
   duration: number; // in minutes
   description: string;
   image_url: string;
-  category: Category
+  category: Category,
+  screenings?: Screening[]
 }
 
 export interface Room {
@@ -34,7 +35,8 @@ export interface Screening {
   movieId: number;
   roomId: number;
   datetime: string;
-  availableSeats: number;
+  available_seats: number;
+  room: Room
 }
 
 export interface Reservation {

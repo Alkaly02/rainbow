@@ -17,6 +17,11 @@ export const fetchMovies = async (): Promise<Movie[]> => {
   const response = await axios.get(`${API_URL}/movies`);
   return response.data;
 };
+export const fetchMovieById = async (id: number): Promise<Movie> => {
+  const response = await axios.get(`${API_URL}/movies/${id}`);
+  return response.data;
+};
+
 
 export const fetchRooms = async (): Promise<Room[]> => {
   const response = await axios.get(`${API_URL}/rooms`);
