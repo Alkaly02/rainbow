@@ -21,6 +21,7 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [ticketCount, setTicketCount] = useState<number>(1);
   const { currentUser } = useAuth();
 
+
   const selectScreening = (screening: Screening) => {
     setSelectedScreening(screening);
     setTicketCount(1); // Reset ticket count when selecting a new screening
@@ -28,14 +29,14 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   const createReservation = async (): Promise<boolean> => {
     if (!currentUser || !selectedScreening) return false;
-    
+
     // Check if enough seats are available
-    if (selectedScreening.availableSeats < ticketCount) return false;
-    
+    if (selectedScreening.available_seats < ticketCount) return false;
+
     // Calculate total amount (in a real app, this would come from a pricing service)
     const ticketPrice = 12.00; // Example price per ticket
     const totalAmount = ticketPrice * ticketCount;
-    
+
     // Create new reservation
     const newReservation: Reservation = {
       id: reservations.length + 1,
@@ -45,33 +46,33 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
       status: 'pending',
       totalAmount
     };
-    
+
     // Simulate payment processing
     const paymentSuccess = await simulatePayment(newReservation);
-    
+
     if (paymentSuccess) {
       // Update reservation status
       newReservation.status = 'confirmed';
-      
+
       // Add to reservations array
       reservations.push(newReservation);
-      
+
       // Update available seats
       const screeningIndex = screenings.findIndex(s => s.id === selectedScreening.id);
       if (screeningIndex !== -1) {
-        screenings[screeningIndex].availableSeats -= ticketCount;
+        screenings[screeningIndex].available_seats -= ticketCount;
       }
-      
+
       return true;
     }
-    
+
     return false;
   };
 
   const simulatePayment = async (reservation: Reservation): Promise<boolean> => {
     // Simulate payment processing delay
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Create new payment record
     const newPayment: Payment = {
       id: payments.length + 1,
@@ -79,10 +80,10 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
       amount: reservation.totalAmount,
       status: 'completed'
     };
-    
+
     // Add to payments array
     payments.push(newPayment);
-    
+
     return true; // Always succeed in this mock implementation
   };
 
@@ -97,12 +98,12 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
       // Only allow cancellation if status is pending
       if (reservations[index].status === 'pending') {
         reservations[index].status = 'cancelled';
-        
+
         // Return tickets to available seats
         const screeningId = reservations[index].screeningId;
         const screeningIndex = screenings.findIndex(s => s.id === screeningId);
         if (screeningIndex !== -1) {
-          screenings[screeningIndex].availableSeats += reservations[index].numberOfTickets;
+          screenings[screeningIndex].available_seats += reservations[index].numberOfTickets;
         }
       }
     }

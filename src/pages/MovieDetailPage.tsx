@@ -21,7 +21,7 @@ const MovieDetailPage: React.FC = () => {
   const { selectScreening } = useReservation();
   const { currentUser } = useAuth();
 
-  console.log({movie});
+  // console.log({movie});
 
 
   // const movie = getMovieById(movieId);
@@ -65,9 +65,6 @@ const MovieDetailPage: React.FC = () => {
   }
 
   const filteredScreenings = (selectedDate && screeningsByDate) ? screeningsByDate[selectedDate] : [];
-
-  console.log({filteredScreenings});
-
 
   const handleScreeningSelect = (screening: typeof screenings[0]) => {
     selectScreening(screening);

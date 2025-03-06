@@ -18,6 +18,7 @@ export interface Movie {
   title: string;
   categoryId: number;
   duration: number; // in minutes
+  price?: number;
   description: string;
   image_url: string;
   category: Category,
@@ -32,7 +33,7 @@ export interface Room {
 
 export interface Screening {
   id: number;
-  movieId: number;
+  movie_id: number;
   roomId: number;
   datetime: string;
   available_seats: number;
