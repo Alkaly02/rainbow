@@ -40,12 +40,12 @@ export interface Screening {
 }
 
 export interface Reservation {
-  id: number;
-  userId: number;
-  screeningId: number;
-  numberOfTickets: number;
-  status: 'pending' | 'confirmed' | 'cancelled';
-  totalAmount: number;
+  id?: number;
+  user_id: number;
+  screening_id: number;
+  number_of_tickets: number;
+  status?: 'pending' | 'confirmed' | 'cancelled';
+  total_amount: number;
 }
 
 export interface Payment {

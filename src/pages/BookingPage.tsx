@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { Clock, Calendar, Users, CreditCard } from 'lucide-react';
 import { formatDate } from '../utils/dates';
 
+
 const BookingPage: React.FC = () => {
   const navigate = useNavigate();
   const { selectedScreening, ticketCount, setTicketCount, createReservation } = useReservation();
@@ -164,6 +165,7 @@ const BookingPage: React.FC = () => {
           </button>
         </div>
       ) : (
+          // ! Informations de paiement
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center">

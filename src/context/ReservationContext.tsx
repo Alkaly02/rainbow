@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { Screening, Reservation, Payment } from '../types';
 import { screenings, reservations, payments } from '../data/mockData';
 import { useAuth } from './AuthContext';
+import { createReservationService } from '../services/reservation';
+import { useMutation } from '@tanstack/react-query';
 
 interface ReservationContextType {
   selectedScreening: Screening | null;
@@ -15,11 +17,24 @@ interface ReservationContextType {
 }
 
 const ReservationContext = createContext<ReservationContextType | undefined>(undefined);
+interface ReservationResponse {
+  reservation: Reservation
+}
 
 export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [selectedScreening, setSelectedScreening] = useState<Screening | null>(null);
   const [ticketCount, setTicketCount] = useState<number>(1);
   const { currentUser } = useAuth();
+  const reservationMutation = useMutation<ReservationResponse, Error, Reservation>({
+      mutationFn: createReservationService,
+      onSuccess: (data) => {
+        console.log("Inscription réussie:", data);
+      },
+      onError: (error) => {
+        alert("Une erreur est survenue")
+        console.error("Erreur d'inscription:", error);
+      },
+    });
 
 
   const selectScreening = (screening: Screening) => {
@@ -27,7 +42,10 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
     setTicketCount(1); // Reset ticket count when selecting a new screening
   };
 
-  const createReservation = async (): Promise<boolean> => {
+  console.log({selectScreening});
+
+
+  const createReservation = () => {
     if (!currentUser || !selectedScreening) return false;
 
     // Check if enough seats are available
@@ -38,54 +56,43 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
     const totalAmount = ticketPrice * ticketCount;
 
     // Create new reservation
+    // 'user_id','screening_id','number_of_tickets','status','total_amount'
     const newReservation: Reservation = {
-      id: reservations.length + 1,
-      userId: currentUser.id,
-      screeningId: selectedScreening.id,
-      numberOfTickets: ticketCount,
-      status: 'pending',
-      totalAmount
+      user_id: currentUser.id,
+      screening_id: selectedScreening.id,
+      number_of_tickets: ticketCount,
+      // status: 'pending',
+      total_amount: totalAmount
     };
-
+    reservationMutation.mutateAsync(newReservation).then((res) => {
+      alert("Nouvelle reservation ajoutee")
+    }).catch((err) => {
+      console.log("Error reservation", err);
+      alert("Une alerte est survenue")
+    })
     // Simulate payment processing
-    const paymentSuccess = await simulatePayment(newReservation);
+    // const paymentSuccess = await simulatePayment(newReservation);
 
-    if (paymentSuccess) {
+    // TODO: remove this later
+    // if () {
       // Update reservation status
-      newReservation.status = 'confirmed';
+      // newReservation.status = 'confirmed';
 
       // Add to reservations array
-      reservations.push(newReservation);
+      // reservations.push(newReservation);
 
       // Update available seats
-      const screeningIndex = screenings.findIndex(s => s.id === selectedScreening.id);
-      if (screeningIndex !== -1) {
-        screenings[screeningIndex].available_seats -= ticketCount;
-      }
+      // const screeningIndex = screenings.findIndex(s => s.id === selectedScreening.id);
+      // if (screeningIndex !== -1) {
+      //   screenings[screeningIndex].available_seats -= ticketCount;
+      // }
 
-      return true;
-    }
+      // return true;
+    // }
 
-    return false;
+    // return false;
   };
 
-  const simulatePayment = async (reservation: Reservation): Promise<boolean> => {
-    // Simulate payment processing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Create new payment record
-    const newPayment: Payment = {
-      id: payments.length + 1,
-      reservationId: reservation.id,
-      amount: reservation.totalAmount,
-      status: 'completed'
-    };
-
-    // Add to payments array
-    payments.push(newPayment);
-
-    return true; // Always succeed in this mock implementation
-  };
 
   const getUserReservations = (): Reservation[] => {
     if (!currentUser) return [];
