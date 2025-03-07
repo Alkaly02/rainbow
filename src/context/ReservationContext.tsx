@@ -1,9 +1,8 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { Screening, Reservation, Payment } from '../types';
-import { screenings, reservations, payments } from '../data/mockData';
+import { Screening, Reservation } from '../types';
 import { useAuth } from './AuthContext';
-import { createReservationService } from '../services/reservation';
-import { useMutation } from '@tanstack/react-query';
+import { createReservationService, fetchUserReservations } from '../services/reservation';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMovie } from './MovieContext';
 
 interface ReservationContextType {
@@ -13,7 +12,7 @@ interface ReservationContextType {
   setTicketCount: (count: number) => void;
   createReservation: (callBack: () => void) => void;
   userReservations: Reservation[];
-  allReservations: Reservation[];
+  isReservationsLoading: boolean;
   cancelReservation: (reservationId: number) => void;
 }
 
@@ -36,16 +35,18 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
         console.error("Erreur d'inscription:", error);
       },
   });
+  const { data: reservations = [], isLoading: isReservationsLoading, error } = useQuery<Reservation[]>({
+    queryKey: ['reservations'],
+    queryFn: () => fetchUserReservations(),
+  });
   const { getMovieById } = useMovie();
+  const queryClient = useQueryClient();
 
 
   const selectScreening = (screening: Screening) => {
     setSelectedScreening(screening);
     setTicketCount(1); // Reset ticket count when selecting a new screening
   };
-
-  console.log({selectScreening});
-
 
   const createReservation = (callBackSuccess: () => void) => {
     if (!currentUser || !selectedScreening) return false;
@@ -69,41 +70,21 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
     reservationMutation.mutateAsync(newReservation).then((res) => {
       alert("Nouvelle reservation ajoutee")
+      // ! Revalider le cash
+      queryClient.invalidateQueries('reservations');
       callBackSuccess()
     }).catch((err) => {
       console.log("Error reservation", err);
       alert("Une alerte est survenue")
     })
-    // Simulate payment processing
-    // const paymentSuccess = await simulatePayment(newReservation);
-
-    // TODO: remove this later
-    // if () {
-      // Update reservation status
-      // newReservation.status = 'confirmed';
-
-      // Add to reservations array
-      // reservations.push(newReservation);
-
-      // Update available seats
-      // const screeningIndex = screenings.findIndex(s => s.id === selectedScreening.id);
-      // if (screeningIndex !== -1) {
-      //   screenings[screeningIndex].available_seats -= ticketCount;
-      // }
-
-      // return true;
-    // }
-
-    // return false;
-  };
-
-
-  const getUserReservations = () => {
   };
 
   const cancelReservation = (reservationId: number) => {
 
   };
+
+  console.log({reservations});
+
 
   return (
     <ReservationContext.Provider value={{
@@ -112,8 +93,8 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
       ticketCount,
       setTicketCount,
       createReservation,
-      userReservations: [],
-      allReservations: reservations,
+      userReservations: reservations,
+      isReservationsLoading,
       cancelReservation
     }}>
       {children}

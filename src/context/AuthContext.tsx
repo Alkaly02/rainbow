@@ -59,6 +59,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // !Sauvegarder l'utilisateur en local storage pour ne pas le perdre au rafraichissement de la page
       storage.saveUser(res.user)
       setCurrentUser(res.user)
+      localStorage.setItem('token', res.token)
       successCallback()
     })
   };
@@ -73,6 +74,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // !Sauvegarder l'utilisateur en local storage pour ne pas le perdre au rafraichissement de la page
       storage.saveUser(res.user)
       setCurrentUser(res.user)
+      localStorage.setItem('token', res.token)
       successCallback()
     })
   };

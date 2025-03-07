@@ -36,7 +36,8 @@ export interface Screening {
   roomId: number;
   datetime: string;
   available_seats: number;
-  room: Room
+  room: Room,
+  movie: Movie,
 }
 
 export interface Reservation {
@@ -46,6 +47,7 @@ export interface Reservation {
   number_of_tickets: number;
   status?: 'pending' | 'confirmed' | 'cancelled';
   total_amount: number;
+  screening?: Screening;
 }
 
 export interface Payment {

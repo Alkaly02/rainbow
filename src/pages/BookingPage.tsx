@@ -129,7 +129,7 @@ const BookingPage: React.FC = () => {
                   id="ticketCount"
                   value={ticketCount}
                   onChange={handleTicketCountChange}
-                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 border"
                   disabled={isProcessing}
                 >
                   {Array.from({ length: Math.min(10, selectedScreening.available_seats) }, (_, i) => i + 1).map(num => (
@@ -186,7 +186,7 @@ const BookingPage: React.FC = () => {
                     value={paymentDetails.cardNumber}
                     onChange={handleInputChange}
                     placeholder="1234 5678 9012 3456"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 border"
                     required
                     disabled={isProcessing}
                   />
@@ -203,7 +203,7 @@ const BookingPage: React.FC = () => {
                     value={paymentDetails.cardHolder}
                     onChange={handleInputChange}
                     placeholder="John Doe"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 border"
                     required
                     disabled={isProcessing}
                   />
@@ -220,7 +220,7 @@ const BookingPage: React.FC = () => {
                     value={paymentDetails.expiryDate}
                     onChange={handleInputChange}
                     placeholder="MM/AA"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 border"
                     required
                     disabled={isProcessing}
                   />
@@ -237,7 +237,7 @@ const BookingPage: React.FC = () => {
                     value={paymentDetails.cvv}
                     onChange={handleInputChange}
                     placeholder="123"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 border"
                     required
                     disabled={isProcessing}
                   />
