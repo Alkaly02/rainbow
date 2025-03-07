@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import UserReservationsPage from './pages/UserReservationsPage';
 import ReservationConfirmationPage from './pages/ReservationConfirmationPage';
+import Footer from './components/Footer';
 // import AdminPage from './pages/AdminPage';
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
           <ReservationProvider>
             <div className="min-h-screen bg-gray-100">
               <Navbar />
-              <main>
+              <main className="min-h-24">
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/movie/:id" element={<MovieDetailPage />} />
@@ -33,6 +34,7 @@ function App() {
                   {/* <Route path="/admin" element={<AdminPage />} /> */}
                 </Routes>
               </main>
+              <Footer />
             </div>
           </ReservationProvider>
         </MovieProvider>

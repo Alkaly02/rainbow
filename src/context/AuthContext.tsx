@@ -2,10 +2,11 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { User } from '../types';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser, registerUser } from '../services/auth';
+import { storage } from '../utils/storage';
 
 interface AuthContextType {
   currentUser: User | null;
-  login: (email: string, password: string) => void;
+  login: (email: string, password: string, successCallback: () => void) => void;
   logout: () => void;
   register: (name: string, email: string, dateOfBirth: string, password: string, successCallback: () => void) => void;
 }
@@ -28,7 +29,7 @@ export interface AuthResponse {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(storage.getUser());
     // Mutation pour l'inscription
   const registerMutation = useMutation<AuthResponse, Error, RegisterData>({
     mutationFn: registerUser,
@@ -53,24 +54,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     },
   });
 
-  const login = (email: string, password: string) => {
+  const login = (email: string, password: string, successCallback: () => void) => {
     loginMutation.mutateAsync({ email, password }).then((res) => {
-      console.log({res});
-      // if (user) {
-      //   setCurrentUser(user);
-      //   return true;
-      // }
-      // return false;
-
+      // !Sauvegarder l'utilisateur en local storage pour ne pas le perdre au rafraichissement de la page
+      storage.saveUser(res.user)
+      setCurrentUser(res.user)
+      successCallback()
     })
   };
 
   const logout = () => {
     setCurrentUser(null);
+    storage.clear()
   };
 
   const register = (name: string, email: string, password: string, dateOfBirth: string, successCallback: () => void) => {
     registerMutation.mutateAsync({ name, email, password, date_of_birth: dateOfBirth }).then((res) => {
+      // !Sauvegarder l'utilisateur en local storage pour ne pas le perdre au rafraichissement de la page
+      storage.saveUser(res.user)
       setCurrentUser(res.user)
       successCallback()
     })

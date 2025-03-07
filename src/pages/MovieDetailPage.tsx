@@ -30,6 +30,9 @@ const MovieDetailPage: React.FC = () => {
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
+  if (isMovieLoading) {
+    return <svg className="mr-3 size-5 animate-spin bg-cyan-800" viewBox="0 0 24 24"></svg>
+  }
   if (!movie) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
