@@ -17,7 +17,7 @@ export interface Movie {
   title: string;
   categoryId: number;
   duration: number; // in minutes
-  price?: number;
+  price: number;
   description: string;
   image_url: string;
   category: Category,

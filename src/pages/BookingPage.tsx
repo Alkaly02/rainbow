@@ -5,6 +5,9 @@ import { useMovie } from '../context/MovieContext';
 import { useAuth } from '../context/AuthContext';
 import { Clock, Calendar, Users, CreditCard } from 'lucide-react';
 import { formatDate } from '../utils/dates';
+import { Movie } from '../types';
+import { useQuery } from '@tanstack/react-query';
+import { fetchMovieById } from '../services/api';
 
 
 const BookingPage: React.FC = () => {
@@ -12,9 +15,6 @@ const BookingPage: React.FC = () => {
   const { selectedScreening, ticketCount, setTicketCount, createReservation } = useReservation();
   const { getMovieById } = useMovie();
   const { currentUser } = useAuth();
-
-  console.log({selectedScreening});
-
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState({
@@ -30,6 +30,7 @@ const BookingPage: React.FC = () => {
   }
 
   const movie = getMovieById(selectedScreening.movie_id);
+  console.log({selectedScreening, movie});
 
   if (!movie) {
     navigate('/');
@@ -48,7 +49,7 @@ const BookingPage: React.FC = () => {
     minute: '2-digit'
   });
 
-  console.log({movie});
+  console.log({selectedScreening});
 
 
   const ticketPrice = movie?.price ? Number(movie.price) : 0; // Example price per ticket
@@ -75,23 +76,22 @@ const BookingPage: React.FC = () => {
       return;
     }
 
-    setIsProcessing(true);
+    // setIsProcessing(true);
 
-    try {
-      const success = await createReservation();
+    createReservation(() => { navigate('/reservation-confirmation') });
 
-      if (success) {
-        navigate('/reservation-confirmation');
-      } else {
-        alert('La réservation a échoué. Veuillez réessayer.');
-      }
-    } catch (error) {
-      console.error('Reservation error:', error);
-      alert('Une erreur est survenue. Veuillez réessayer.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+    //   if (success) {
+    //     ;
+    //   } else {
+    //     alert('La réservation a échoué. Veuillez réessayer.');
+    //   }
+    // } catch (error) {
+    //   console.error('Reservation error:', error);
+    //   alert('Une erreur est survenue. Veuillez réessayer.');
+    // } finally {
+    //   setIsProcessing(false);
+    // }
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
