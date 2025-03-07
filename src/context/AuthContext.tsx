@@ -1,54 +1,79 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { User } from '../types';
-import { users } from '../data/mockData';
+import { useMutation } from '@tanstack/react-query';
+import { loginUser, registerUser } from '../services/auth';
 
 interface AuthContextType {
   currentUser: User | null;
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => void;
   logout: () => void;
-  register: (name: string, email: string, dateOfBirth: string, password: string) => boolean;
+  register: (name: string, email: string, dateOfBirth: string, password: string, successCallback: () => void) => void;
+}
+
+export interface AuthData {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData extends AuthData {
+  name: string;
+  date_of_birth: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: User;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+    // Mutation pour l'inscription
+  const registerMutation = useMutation<AuthResponse, Error, RegisterData>({
+    mutationFn: registerUser,
+    onSuccess: (data) => {
+      console.log("Inscription réussie:", data);
+    },
+    onError: (error) => {
+      alert("Une erreur est survenue")
+      console.error("Erreur d'inscription:", error);
+    },
+  });
 
-  const login = (email: string, password: string): boolean => {
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-      setCurrentUser(user);
-      return true;
-    }
-    return false;
+  // Mutation pour la connexion
+  const loginMutation = useMutation<AuthResponse, Error, AuthData>({
+    mutationFn:loginUser,
+    onSuccess: (data) => {
+      console.log("Connexion réussie:", data);
+    },
+    onError: (error) => {
+      alert("Une erreur est survenue")
+      console.error("Erreur de connexion:", error);
+    },
+  });
+
+  const login = (email: string, password: string) => {
+    loginMutation.mutateAsync({ email, password }).then((res) => {
+      console.log({res});
+      // if (user) {
+      //   setCurrentUser(user);
+      //   return true;
+      // }
+      // return false;
+
+    })
   };
 
   const logout = () => {
     setCurrentUser(null);
   };
 
-  const register = (name: string, email: string, dateOfBirth: string, password: string): boolean => {
-    // Check if email already exists
-    if (users.some(u => u.email === email)) {
-      return false;
-    }
-
-    // Create new user
-    const newUser: User = {
-      id: users.length + 1,
-      name,
-      email,
-      dateOfBirth,
-      password,
-      isAdmin: false
-    };
-
-    // Add to users array (in a real app, this would be a database operation)
-    users.push(newUser);
-    
-    // Log in the new user
-    setCurrentUser(newUser);
-    return true;
+  const register = (name: string, email: string, password: string, dateOfBirth: string, successCallback: () => void) => {
+    registerMutation.mutateAsync({ name, email, password, date_of_birth: dateOfBirth }).then((res) => {
+      setCurrentUser(res.user)
+      successCallback()
+    })
   };
 
   return (

@@ -2,9 +2,8 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  dateOfBirth: string;
-  password: string;
-  isAdmin: boolean;
+  date_of_birth: string;
+  is_admin: boolean;
 }
 
 export interface Category {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { User, Category, Movie, Room, Screening, Reservation, Payment } from '../types';
 
-const API_URL = 'http://127.0.0.1:8000/api'; // Remplace par l'URL de ton API
+export const API_URL = 'http://127.0.0.1:8000/api'; // Remplace par l'URL de ton API
 
 export const fetchUsers = async (): Promise<User[]> => {
   const response = await axios.get(`${API_URL}/users`);
